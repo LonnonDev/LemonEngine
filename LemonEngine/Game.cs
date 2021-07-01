@@ -16,11 +16,13 @@ namespace LemonEngine
 
         private float movementLeftRight = 0;
         private float movementUpDown = 0;
-
         private float velLeftRight = 0;
         private float velUpDown = 0;
 
         public float aspectRatio = 800 / 600;
+        Shader _shader;
+
+
         float[] square;
 
 
@@ -31,15 +33,18 @@ namespace LemonEngine
         protected override void OnLoad()
         {
 
-
             RGBA bgColor = new(255, 192, 203, 255);
             bgColor.SetBackground();
+
+            _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+            _shader.Use();
 
             base.OnLoad();
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+
             GL.Clear(ClearBufferMask.ColorBufferBit);
             aspectRatio = (float)Size.X / (float)Size.Y;
             square = new Rectangle(
@@ -63,6 +68,8 @@ namespace LemonEngine
             GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
 
             SwapBuffers();
+
+            _shader.Use();
 
             base.OnRenderFrame(e);
         }
