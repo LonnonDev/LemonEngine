@@ -21,24 +21,19 @@ namespace LemonEngine
             float velUpDown = 0;
             float velLeftRight = 0;
 
-            if (input.IsKeyDown(Keys.W))
-            {
+            if (input.IsKeyDown(Keys.W)) {
                 velUpDown = speed;
             }
-            if (input.IsKeyDown(Keys.S))
-            {
+            if (input.IsKeyDown(Keys.S)) {
                 velUpDown = -speed;
             }
-            if (input.IsKeyDown(Keys.D))
-            {
+            if (input.IsKeyDown(Keys.D)) {
                 velLeftRight = speed;
             }
-            if (input.IsKeyDown(Keys.A))
-            {
+            if (input.IsKeyDown(Keys.A)) {
                 velLeftRight = -speed;
             }
-            if (Math.Abs(velLeftRight) > 0 && Math.Abs(velUpDown) > 0)
-            {
+            if (Math.Abs(velLeftRight) > 0 && Math.Abs(velUpDown) > 0) {
                 velUpDown /= (float)Math.Sqrt(2f);
                 velLeftRight /= (float)Math.Sqrt(2f);
             }
