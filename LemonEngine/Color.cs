@@ -8,21 +8,34 @@ namespace LemonEngine
         {
             public RGBA(float red, float green, float blue, float alpha)
             {
-                Red = red / 255f;
-                Green = green / 255f;
-                Blue = blue / 255f;
-                Alpha = alpha / 255f;
+                R = red / 255f;
+                G = green / 255f;
+                B = blue / 255f;
+                A = alpha / 255f;
             }
 
-            public float Red { get; }
-            public float Green { get; }
-            public float Blue { get; }
-            public float Alpha { get; }
+            public float R { get; }
+            public float G { get; }
+            public float B { get; }
+            public float A { get; }
 
             public void SetBackground()
             {
-                GL.ClearColor(this.Red, this.Green, this.Blue, this.Alpha);
+                GL.ClearColor(this.R, this.G, this.B, this.A);
             }
+        }
+        public struct RGB
+        {
+            public RGB(float red, float green, float blue)
+            {
+                R = red / 255f;
+                G = green / 255f;
+                B = blue / 255f;
+            }
+
+            public float R { get; }
+            public float G { get; }
+            public float B { get; }
         }
     }
 }
