@@ -28,3 +28,6 @@ LemonEngine/bin/Debug/net5.0/LemonEngine.dll
 *.dll
 *.pdb
 *.dll
+LemonEngine/obj/Debug/net5.0/.NETCoreApp,Version=v5.0.AssemblyAttributes.cs
+LemonEngine/obj/Debug/net5.0/LemonEngine.AssemblyInfo.cs
+LemonEngine/obj/Debug/net5.0/LemonEngine.GeneratedMSBuildEditorConfig.editorconfig
