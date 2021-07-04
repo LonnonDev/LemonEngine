@@ -10,7 +10,7 @@ namespace LemonEngine
 {
     public class Shader
     {
-        int Handle;
+        public int Handle;
 
         public Shader(string vertexPath, string fragmentPath) {
             string VertexShaderSource;
