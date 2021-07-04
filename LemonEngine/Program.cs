@@ -10,7 +10,7 @@ namespace LemonEngine
             NativeWindowSettings nativeWindowSettings = new()
             {
                 Size = new Vector2i(800, 800),
-                Title = "Cum",
+                Title = "LemonEngine",
             };
 
             using (Game game = new(GameWindowSettings.Default, nativeWindowSettings))
