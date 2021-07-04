@@ -6,6 +6,7 @@ using static LemonEngine.Shapes;
 using static LemonEngine.Color;
 using System.Linq;
 using System;
+using OpenTK.Mathematics;
 
 namespace LemonEngine
 {
@@ -16,14 +17,26 @@ namespace LemonEngine
 
         private float movementLeftRight = 0;
         private float movementUpDown = 0;
-        private float velLeftRight = 0;
-        private float velUpDown = 0;
+
+        Rectangle player = new(
+            100,
+            100,
+            100,
+            100
+        );
+        Rectangle Cube = new(
+            300,
+            300,
+            100,
+            100
+        );
 
         public float aspectRatio = 800 / 600;
         Shader _shader;
 
 
         float[] square;
+        float[] cube;
 
 
         public Game(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
@@ -32,6 +45,17 @@ namespace LemonEngine
         // Now, we start initializing OpenGL.
         protected override void OnLoad()
         {
+            cube = new CreateRectangle(
+                new Shapes.Vector2(
+                    Cube.X,
+                    Cube.Y,
+                    Size
+                ),
+                Cube.Width,
+                Cube.Height,
+                Size
+            )
+            .CreateVertices();
 
             RGBA bgColor = new(255, 192, 203, 255);
             bgColor.SetBackground();
@@ -42,19 +66,43 @@ namespace LemonEngine
             base.OnLoad();
         }
 
+        private float clamp(float input, float min, float max)
+        {
+            return input < min ? min : (input > max ? max : input);
+        }
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+            _shader.Use();
+            int vertexColorLocation = GL.GetUniformLocation(_shader.Handle, "objColor");
+
+            float xClamp = (movementLeftRight / (float)Size.X + 1) / 2;
+            float yClamp = (movementUpDown / (float)Size.Y + 1) / 2;
+            float whiteness = (xClamp) * (yClamp);
+            float red = clamp((1 - xClamp) * yClamp + whiteness, 0f, 1f);
+            float green = clamp((1 - xClamp) * (1 - yClamp) + whiteness, 0f, 1f); 
+            float blue = clamp(xClamp * (1 - yClamp) + whiteness, 0f, 1f);
+
+            GL.Uniform4(vertexColorLocation, red, green, blue, 255f);
 
             GL.Clear(ClearBufferMask.ColorBufferBit);
             aspectRatio = (float)Size.X / (float)Size.Y;
-            square = new Rectangle(
-                new Vector2(100 + movementLeftRight, 100 + movementUpDown, Size),
-                new Vector2(100 + movementLeftRight, -100 + movementUpDown, Size),
-                new Vector2(-100 + movementLeftRight, 100 + movementUpDown, Size),
-                new Vector2(-100 + movementLeftRight, -100 + movementUpDown, Size))
-            .ActuallyFuckingCreateObject();
+            player.X = player.X + movementLeftRight;
+            player.Y = player.Y + movementUpDown;
+            square = new CreateRectangle(
+                new Shapes.Vector2(
+                    player.X,
+                    player.Y, 
+                    Size
+                ),
+                player.Width,
+                player.Height,
+                Size
+            )
+            .CreateVertices();
+            
 
-            float[] _vertices = square;
+            float[] _vertices = square.Concat(cube).ToArray();
+            int amountOfVertices = _vertices.Length/3;
 
             _vertexBufferObject = GL.GenBuffer();
             _vertexArrayObject = GL.GenVertexArray();
@@ -65,50 +113,35 @@ namespace LemonEngine
             GL.EnableVertexAttribArray(0);
 
             GL.BindVertexArray(_vertexArrayObject);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
-
+            GL.DrawArrays(PrimitiveType.Triangles, 0, amountOfVertices);
+            
             SwapBuffers();
-
-            _shader.Use();
 
             base.OnRenderFrame(e);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            var input = KeyboardState;
-            var speed = 20f;
-
+            KeyboardState input = KeyboardState;
 
             if (input.IsKeyDown(Keys.Escape))
             {
                 Close();
             }
-            if (input.IsKeyDown(Keys.W))
-            {
-                velUpDown = speed;
-            }
-            if (input.IsKeyDown(Keys.S))
-            {
-                velUpDown = -speed;
-            }
-            if (input.IsKeyDown(Keys.D))
-            {
-                velLeftRight = speed;
-            }
-            if (input.IsKeyDown(Keys.A))
-            {
-                velLeftRight = -speed;
-            }
-
-            if (Math.Abs(movementLeftRight) > 0 && Math.Abs(movementUpDown) > 0)
-            {
-                Console.WriteLine("hi");
-                velUpDown /= (float)Math.Sqrt(2f);
-                velLeftRight /= (float)Math.Sqrt(2f);
-            }
-            movementUpDown += velUpDown;
-            movementLeftRight += velLeftRight;
+            movementUpDown = 0;
+            movementLeftRight = 0;
+            float[] playerMovement = PlayerController.Movement(
+                input, 
+                movementUpDown, 
+                movementLeftRight,
+                player.X,
+                player.Y,
+                player.Width,
+                player.Height,
+                Size
+            );
+            movementUpDown = playerMovement[0];
+            movementLeftRight = playerMovement[1];
 
             base.OnUpdateFrame(e);
         }
@@ -131,6 +164,10 @@ namespace LemonEngine
             GL.DeleteVertexArray(_vertexArrayObject);
 
             base.OnUnload();
+        }
+
+        private void PlayerBorderCollision() {
+            
         }
     }
 }
