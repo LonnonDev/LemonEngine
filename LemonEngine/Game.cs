@@ -56,6 +56,7 @@ namespace LemonEngine
                 Size
             )
             .CreateVertices();
+            Renderer.AddToStatic(cube);
 
             RGBA bgColor = new(255, 192, 203, 255);
             bgColor.SetBackground();
@@ -66,54 +67,35 @@ namespace LemonEngine
             base.OnLoad();
         }
 
-        private float clamp(float input, float min, float max)
-        {
-            return input < min ? min : (input > max ? max : input);
-        }
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             _shader.Use();
-            int vertexColorLocation = GL.GetUniformLocation(_shader.Handle, "objColor");
-
-            float xClamp = (movementLeftRight / (float)Size.X + 1) / 2;
-            float yClamp = (movementUpDown / (float)Size.Y + 1) / 2;
-            float whiteness = (xClamp) * (yClamp);
-            float red = clamp((1 - xClamp) * yClamp + whiteness, 0f, 1f);
-            float green = clamp((1 - xClamp) * (1 - yClamp) + whiteness, 0f, 1f); 
-            float blue = clamp(xClamp * (1 - yClamp) + whiteness, 0f, 1f);
-
-            GL.Uniform4(vertexColorLocation, red, green, blue, 255f);
-
+            
             GL.Clear(ClearBufferMask.ColorBufferBit);
             aspectRatio = (float)Size.X / (float)Size.Y;
             player.X = player.X + movementLeftRight;
             player.Y = player.Y + movementUpDown;
+
+
             square = new CreateRectangle(
                 new Shapes.Vector2(
                     player.X,
-                    player.Y, 
+                    player.Y,
                     Size
                 ),
                 player.Width,
                 player.Height,
                 Size
-            )
-            .CreateVertices();
-            
-
-            float[] _vertices = square.Concat(cube).ToArray();
-            int amountOfVertices = _vertices.Length/3;
-
-            _vertexBufferObject = GL.GenBuffer();
-            _vertexArrayObject = GL.GenVertexArray();
-            GL.BindVertexArray(_vertexArrayObject);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
-            GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.DynamicDraw);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
-            GL.EnableVertexAttribArray(0);
-
-            GL.BindVertexArray(_vertexArrayObject);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, amountOfVertices);
+                ).CreateVertices();
+            Renderer.AddToDynamic(square);
+            Renderer.Render(
+                _vertexArrayObject,
+                _vertexBufferObject,
+                _shader,
+                movementUpDown,
+                movementLeftRight,
+                Size
+            );
             
             SwapBuffers();
 

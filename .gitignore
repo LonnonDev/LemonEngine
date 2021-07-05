@@ -31,3 +31,9 @@ LemonEngine/bin/Debug/net5.0/LemonEngine.dll
 LemonEngine/obj/Debug/net5.0/.NETCoreApp,Version=v5.0.AssemblyAttributes.cs
 LemonEngine/obj/Debug/net5.0/LemonEngine.AssemblyInfo.cs
 LemonEngine/obj/Debug/net5.0/LemonEngine.GeneratedMSBuildEditorConfig.editorconfig
+LemonEngine/bin/Debug/net5.0/runtimes/linux-x64/native/libglfw.so.3.3
+LemonEngine/bin/Debug/net5.0/runtimes/osx-x64/native/libglfw.3.dylib
+LemonEngine/obj/Debug/net5.0/apphost.exe
+LemonEngine/obj/Debug/net5.0/LemonEngine.csproj.CopyComplete
+*.txt
+.vs/LemonEngine/v16/.suo

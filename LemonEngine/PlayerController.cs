@@ -51,7 +51,6 @@ namespace LemonEngine
             );
             movementUpDown = playerCollisionArray[0];
             movementLeftRight = playerCollisionArray[1];
-            Console.WriteLine(movementUpDown);
             if (movementUpDown != -Math.Pow(4,63)) {
                 movementUpDown += velUpDown;
                 movementLeftRight += velLeftRight;
@@ -83,7 +82,7 @@ namespace LemonEngine
                 100,
                 100
             );
-            Console.WriteLine($"{playerX < Cube.X + Cube.Width} {playerX + playerWidth > Cube.Y} {playerY < Cube.Y + Cube.Height} {playerY + playerHeight > Cube.Y}");
+            //Console.WriteLine($"{playerX < Cube.X + Cube.Width} {playerX + playerWidth > Cube.Y} {playerY < Cube.Y + Cube.Height} {playerY + playerHeight > Cube.Y}");
             // AABB
             if (playerX < Cube.X + Cube.Width &&
                 playerX + playerWidth > Cube.Y &&
