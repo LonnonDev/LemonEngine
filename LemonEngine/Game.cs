@@ -67,6 +67,11 @@ namespace LemonEngine
             base.OnLoad();
         }
 
+        private static float Clamp(float input, float min, float max)
+        {
+            return input < min ? min : (input > max ? max : input);
+        }
+
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             _shader.Use();
@@ -76,6 +81,17 @@ namespace LemonEngine
             player.X = player.X + movementLeftRight;
             player.Y = player.Y + movementUpDown;
 
+            int vertexColorLocation = GL.GetUniformLocation(_shader.Handle, "objColor");
+
+            float xClamp = (movementLeftRight / (float)Size.X + 1) / 2;
+            float yClamp = (movementUpDown / (float)Size.Y + 1) / 2;
+            float whiteness = (xClamp) * (yClamp);
+            float red = Clamp((1 - xClamp) * yClamp + whiteness, 0f, 1f);
+            float green = Clamp((1 - xClamp) * (1 - yClamp) + whiteness, 0f, 1f);
+            float blue = Clamp(xClamp * (1 - yClamp) + whiteness, 0f, 1f);
+            Console.WriteLine(red);
+
+            GL.Uniform4(vertexColorLocation, red, green, blue, 255f);
 
             square = new CreateRectangle(
                 new Shapes.Vector2(
@@ -88,7 +104,7 @@ namespace LemonEngine
                 Size
                 ).CreateVertices();
             Renderer.AddToDynamic(square);
-            Renderer.Render(
+            int[] rendererArray = Renderer.Render(
                 _vertexArrayObject,
                 _vertexBufferObject,
                 _shader,
@@ -96,9 +112,11 @@ namespace LemonEngine
                 movementLeftRight,
                 Size
             );
+            _vertexBufferObject = rendererArray[0];
+            _vertexArrayObject = rendererArray[1];
             
-            SwapBuffers();
 
+            SwapBuffers();
             base.OnRenderFrame(e);
         }
 
@@ -124,6 +142,7 @@ namespace LemonEngine
             );
             movementUpDown = playerMovement[0];
             movementLeftRight = playerMovement[1];
+            
 
             base.OnUpdateFrame(e);
         }

@@ -23,10 +23,6 @@ namespace LemonEngine
         public static int TotalVertices() {
             return _verticesDynamic.Count/3+_verticesStatic.Count/3;
         }
-        private static float Clamp(float input, float min, float max)
-        {
-            return input < min ? min : (input > max ? max : input);
-        }
 
         public static int[] Render(
             int VBO,
@@ -38,17 +34,6 @@ namespace LemonEngine
         ) {
             float[] vertices = _verticesDynamic.ToArray().Concat(_verticesStatic.ToArray()).ToArray(); 
 
-            shader.Use();
-            int vertexColorLocation = GL.GetUniformLocation(shader.Handle, "objColor");
-
-            float xClamp = (movementLeftRight / (float)Size.X + 1) / 2;
-            float yClamp = (movementUpDown / (float)Size.Y + 1) / 2;
-            float whiteness = (xClamp) * (yClamp);
-            float red = Clamp((1 - xClamp) * yClamp + whiteness, 0f, 1f);
-            float green = Clamp((1 - xClamp) * (1 - yClamp) + whiteness, 0f, 1f);
-            float blue = Clamp(xClamp * (1 - yClamp) + whiteness, 0f, 1f);
-
-            GL.Uniform4(vertexColorLocation, red, green, blue, 255f);
 
 
             VBO = GL.GenBuffer();
