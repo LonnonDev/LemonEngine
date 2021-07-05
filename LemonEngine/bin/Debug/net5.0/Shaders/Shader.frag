@@ -1,14 +1,9 @@
 #version 330 core
 out vec4 FragColor;
 
-
+in vec4 frag_color;
 
 void main()
 {
-    FragColor = RGBA(0, 0, 0, 255);
-}
-
-// RGBA
-vec4 RGBA(float Red, float Green, float Blue, float Alpha) {
-    return vec4(Red/255f, Green/255f, Blue/255f, Alpha/255f);
+    FragColor = frag_color;
 }
