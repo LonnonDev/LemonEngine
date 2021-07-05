@@ -5,6 +5,8 @@ layout(location = 4) in vec4 FragColor;
 
 out vec4 frag_color;
 
+
+
 void main(void)
 {
     gl_Position = vec4(aPosition, 1.0);
