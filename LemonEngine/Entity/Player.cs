@@ -11,8 +11,8 @@ using LemonEngine.Color;
 
 namespace LemonEngine.Entity {
     public class Player : Rectangle {
-        public Vec2f PosOff { get; private set; }
-        public RGBA4fn Color { get; private set; }
+        public Vec2f PosOff { get; set; }
+        public RGBA4fn Color { get; set; }
 
         public const float MoveSpeed = 20f;
 
@@ -50,6 +50,16 @@ namespace LemonEngine.Entity {
             float green = Utils.ClampNormalized((1 - xClamp) * (1 - yClamp) + whiteness);
             float blue = Utils.ClampNormalized(xClamp * (1 - yClamp) + whiteness);
             Color = new(red, green, blue, 1.0f);
+        }
+
+        public void Collide(Rectangle obj) {
+            // Console.WriteLine(this.CollidesWith(obj));
+            if(this.CollidesWith(obj) == CollisionType.COLLINEAR) {
+                Console.WriteLine("Hello");
+            }
+            if (this.CollidesWith(obj) == CollisionType.INTERSECTS) {
+                Console.WriteLine("Hello");
+            }
         }
         /// <summary>
         /// Gets the vertices of the triangles

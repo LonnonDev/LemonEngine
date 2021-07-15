@@ -56,6 +56,12 @@ namespace LemonEngine
             GL.DeleteShader(FragmentShader);
             GL.DeleteShader(VertexShader);
         }
+
+        internal int GetAttribLocation(string attribName)
+        {
+            return GL.GetAttribLocation(Handle, attribName);
+        }
+
         public void Use()
         {
             GL.UseProgram(Handle);

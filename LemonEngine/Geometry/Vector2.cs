@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace LemonEngine.Geometry {
     public class Vec2f {
+        //public struct Vec2f {
         public float X { get; set; }
         public float Y { get; set; }
 
         public Vec2f(float x, float y) {
-            X=x;Y=y;
+            X=x;
+            Y=y;
         }
         public Vec2f Add(Vec2f Other) {
             return new Vec2f(X+Other.X, Y+Other.Y);
@@ -34,5 +36,6 @@ namespace LemonEngine.Geometry {
         public static Vec2f operator /(Vec2f v, float s) => v.DivideScalar(s);
 
         public override string ToString() => $"({X}, {Y})";
+        //}
     }
 }

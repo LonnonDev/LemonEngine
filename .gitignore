@@ -40,3 +40,7 @@ LemonEngine/obj/Debug/net5.0/LemonEngine.csproj.CopyComplete
 .vs/LemonEngine/v16/.suo
 .vs/LemonEngine/v16/.suo
 .vs/LemonEngine/v16/.suo
+LemonEngine/bin/Debug/net5.0/LemonEngine.zip
+LemonEngine/bin/Debug/LemonEngine.1.0.0.nupkg
+LemonEngine/LemonEngine.csproj
+LemonEngine/obj/Debug/LemonEngine.1.0.0.nuspec

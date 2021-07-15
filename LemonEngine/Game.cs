@@ -2,11 +2,15 @@
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
-using LemonEngine.Geometry;
 using LemonEngine.Entity;
 using LemonEngine.Color;
 using System;
-using System.Linq;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using Rectangle = LemonEngine.Geometry.Rectangle;
+using Image = SixLabors.ImageSharp.Image;
+using System.Collections.Generic;
 
 namespace LemonEngine {
     public class Game : GameWindow {
@@ -16,6 +20,7 @@ namespace LemonEngine {
         Player player;
         Rectangle cube;
         Shader shader;
+
 
         public Game(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings) {}
         /// <summary>
@@ -30,24 +35,25 @@ namespace LemonEngine {
             shader.Use();
 
             player = new Player(100, 100, 100, 100);
-            cube = new Rectangle(300, 300, 100, 100);
+            cube = new Rectangle(300, 300, 300, 300);
             Renderer.AddToStatic(cube.GetVertices());
             Renderer.AddToStatic(cube.GetVertices());
-            
+
             base.OnLoad();
         }
         protected override void OnRenderFrame(FrameEventArgs e) {
             shader.Use();
             GL.Clear(ClearBufferMask.ColorBufferBit);
-            int vertexColorLocation = GL.GetUniformLocation(shader.Handle, "ourColor");
+            int vertexColorLocation = GL.GetUniformLocation(shader.Handle, "objColor");
             GL.Uniform4(vertexColorLocation, player.Color.R, player.Color.G, player.Color.B, player.Color.A);
             
             Renderer.AddToDynamic(player.GetVertices());
             //Renderer.AddToDynamic(cube.GetVertices());
             Renderer.Render(out vbo, out vao);
 
+            GC.KeepAlive(player);
+            GC.KeepAlive(cube);
             SwapBuffers();
-
             base.OnRenderFrame(e);
         }
 
@@ -59,6 +65,7 @@ namespace LemonEngine {
                 Close();
             }
             player.Update(input);
+            player.Collide(cube);
 
             base.OnUpdateFrame(e);
         }

@@ -21,7 +21,7 @@ namespace LemonEngine {
             return verticesDynamic.Count/3+verticesStatic.Count/3;
         }
         public static void Render(out int vbo,out int vao) {
-            float[] vertices = verticesStatic.ToArray().Concat(verticesDynamic.ToArray()).ToArray();
+            float[] vertices = verticesDynamic.Concat(verticesStatic).ToArray();
 
             vbo = GL.GenBuffer();
             vao = GL.GenVertexArray();

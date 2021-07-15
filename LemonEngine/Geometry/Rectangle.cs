@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LemonEngine.Geometry {
     public class Rectangle {
@@ -49,8 +46,8 @@ namespace LemonEngine.Geometry {
                 bottomRight.Y = yBk;
             }
             // Create the other two missing vertices of the rectangle
-            Vec2f bottomLeft = new Vec2f(topLeft.X, bottomRight.Y);
-            Vec2f topRight = new Vec2f(bottomRight.X, topLeft.Y);
+            Vec2f bottomLeft = new (topLeft.X, bottomRight.Y);
+            Vec2f topRight = new (bottomRight.X, topLeft.Y);
             // Generate and set triangles
             A = new Triangle(topLeft, bottomLeft, topRight);
             B = new Triangle(bottomRight, topRight, bottomLeft);
@@ -85,28 +82,37 @@ namespace LemonEngine.Geometry {
         }
 
         public CollisionType CollidesWith(Rectangle other) {
-            Vec2f coordsTL = GetTopLeft();
-            Vec2f coordsBR = GetBottomRight();
-            Vec2f otherCoordsTL = other.GetTopLeft();
-            Vec2f otherCoordsBR = other.GetBottomRight();
+            Vec2f obj1 = GetTopLeft();
+            Vec2f obj1br = GetBottomRight();
+            Vec2f obj2 = other.GetTopLeft();
+            Vec2f obj2br = other.GetBottomRight();
+            float obj1w = Math.Abs(obj1.X - obj1br.X);
+            float obj1h = Math.Abs(obj1.Y - obj1br.Y);
+            float obj2w = Math.Abs(obj2.X - obj2br.X);
+            float obj2h = Math.Abs(obj2.Y - obj2br.Y);
+            Console.WriteLine(obj2w);
 
-            bool touchOrIntersect = (coordsTL.X<=otherCoordsBR.X &&
-                              coordsBR.X>=otherCoordsTL.X &&
-                              coordsTL.Y<=otherCoordsBR.Y &&
-                              coordsBR.Y>=otherCoordsTL.Y);
-            if(touchOrIntersect) {
-                bool intersect = (coordsTL.X<otherCoordsBR.X &&
-                              coordsBR.X>otherCoordsTL.X &&
-                              coordsTL.Y<otherCoordsBR.Y &&
-                              coordsBR.Y>otherCoordsTL.Y);
-                if(!intersect) {
-                    return CollisionType.COLLINEAR;
-                } else {
-                    return CollisionType.INTERSECTS;
-                }
-            } else {
-                return CollisionType.NONE;
-            }
+            bool touchOrIntersect = (
+                obj1.X         < obj2.X + obj2w &&
+                obj1.X + obj1w > obj2.X         &&
+                obj1.Y         < obj2.Y + obj2h &&
+                obj1.Y + obj1h > obj2.Y
+            );
+            Console.WriteLine(touchOrIntersect);
+            return CollisionType.NONE;
+            // if(touchOrIntersect) {
+            //     bool intersect = (coordsTL.X<otherCoordsBR.X &&
+            //                   coordsBR.X>otherCoordsTL.X &&
+            //                   coordsTL.Y<otherCoordsBR.Y &&
+            //                   coordsBR.Y>otherCoordsTL.Y);
+            //     if(!intersect) {
+            //         return CollisionType.COLLINEAR;
+            //     } else {
+            //         return CollisionType.INTERSECTS;
+            //     }
+            // } else {
+            //     return CollisionType.NONE;
+            // }
         }
         public override string ToString() {
             Vec2f pos1 = GetTopLeft();
